@@ -5,7 +5,5 @@
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>luegenpresse</groupId>
   <artifactId>commons</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
 </project>
