@@ -16,7 +16,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-@SolrDocument(solrCoreName="news")
+@SolrDocument
 @Getter
 @Setter
 @Builder

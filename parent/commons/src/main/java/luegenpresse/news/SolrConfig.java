@@ -20,6 +20,6 @@ public class SolrConfig {
 
 	@Bean
 	public SolrTemplate solrTemplate() {
-		return new SolrTemplate(solrServer());
+		return new SolrTemplate(solrServer(), "news");
 	}
 }
