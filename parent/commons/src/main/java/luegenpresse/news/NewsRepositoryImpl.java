@@ -37,6 +37,7 @@ public class NewsRepositoryImpl implements INewsRepository {
 
 	@Override
 	public NewsResponse findBy(NewsRequest request) {
+		
 		final SolrQuery query = new SolrQuery();
 		  // edismax query setup
 		  query.set("q", request.getText());

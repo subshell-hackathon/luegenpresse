@@ -4,7 +4,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +11,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import luegenpresse.indexer.ts.TagesschauIndexer;
 import luegenpresse.news.INewsRepository;
-import luegenpresse.news.NewsDocument;
 
 @SpringBootApplication
 public class IndexerApplication {
