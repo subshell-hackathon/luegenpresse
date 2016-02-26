@@ -42,10 +42,4 @@ public class IndexerApplication {
 	
 	@Autowired
 	private INewsRepository repo;
-	
-	@PostConstruct
-	public void start() {
-		NewsDocument doc = NewsDocument.builder().date(new DateTime()).id("test100").url("http://www.tagesschau.de/test-100.html").source("tagesschau").build();
-		repo.add(doc);
-	}
 }
