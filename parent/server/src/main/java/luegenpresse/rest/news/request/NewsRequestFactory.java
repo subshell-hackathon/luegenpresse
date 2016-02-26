@@ -12,5 +12,11 @@ public class NewsRequestFactory {
 		request.setSource(dto.getSource());
 		return request;
 	}
+	
+	public static NewsRequest create(String buzzword) {
+		NewsRequest request = new NewsRequest();
+		request.setText(buzzword);
+		return request;
+	}
 
 }
