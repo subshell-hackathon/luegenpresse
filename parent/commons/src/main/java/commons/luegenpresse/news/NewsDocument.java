@@ -2,11 +2,17 @@ package commons.luegenpresse.news;
 
 import java.util.Set;
 
+import org.apache.solr.client.solrj.beans.Field;
 import org.joda.time.DateTime;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.SolrDocument;
 
+@SolrDocument(solrCoreName="news")
 public class NewsDocument {
 
+	@Id
 	private String id;
+	
 	private String url;
 	private String source;
 	private DateTime date;
