@@ -21,7 +21,7 @@ public class NewsSearchResultDTOFactory {
 	private static NewsDTO create(NewsDocument doc) {
 		NewsDTO newsDTO = new NewsDTO();
 		newsDTO.setUrl(doc.getUrl());
-		newsDTO.setHeadLine(doc.getHeadLine());
+		newsDTO.setHeadLine(doc.getHeadline());
 		return newsDTO;
 	}
 

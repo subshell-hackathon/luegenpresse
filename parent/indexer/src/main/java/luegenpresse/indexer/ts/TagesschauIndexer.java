@@ -66,7 +66,7 @@ public class TagesschauIndexer implements IIndexer {
 			DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(jsonDate.textValue());
 			docBuilder.date(jsonParsedDate);
 			docBuilder.id("tagesschau-" + node.get("sophoraId").textValue());
-			docBuilder.headLine(node.get("topline").textValue() + " - " + node.get("headline").textValue());
+			docBuilder.headline(node.get("topline").textValue() + " - " + node.get("headline").textValue());
 			docBuilder.shortText(node.get("shorttext").textValue());
 			docBuilder.url(node.get("detailsWeb").textValue());
 			docBuilder.source("Tagesschau");

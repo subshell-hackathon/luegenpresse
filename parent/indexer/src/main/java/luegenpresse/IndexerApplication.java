@@ -8,14 +8,11 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import luegenpresse.indexer.ts.TagesschauIndexer;
 import luegenpresse.news.INewsRepository;
 import luegenpresse.news.NewsDocument;
-import luegenpresse.news.NewsRepositoryInMemory;
 
 @SpringBootApplication
 public class IndexerApplication {
@@ -48,7 +45,7 @@ public class IndexerApplication {
 	
 	@PostConstruct
 	public void start() {
-		NewsDocument doc = NewsDocument.builder().date(new DateTime()).id("test100").build();
+		NewsDocument doc = NewsDocument.builder().date(new DateTime()).id("test100").url("http://www.tagesschau.de/test-100.html").source("tagesschau").build();
 		repo.add(doc);
 	}
 }

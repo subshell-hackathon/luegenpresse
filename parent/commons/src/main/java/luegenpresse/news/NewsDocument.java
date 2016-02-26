@@ -43,7 +43,7 @@ public class NewsDocument {
 	@Field
 	private Set<String> geoTags;
 	@Field
-	private String headLine;
+	private String headline;
 	@Field
 	private String shortText;
 	@Field
