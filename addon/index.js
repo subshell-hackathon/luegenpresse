@@ -21,9 +21,9 @@ var button = ToggleButton({
 	id : "lyingPressButton",
 	label : "Was sagt die Lügenpresse dazu?",
 	icon : {
-		"16" : "./icon_16.png",
-		"32" : "./icon_32.png",
-		"64" : "./icon_64.png"
+		"16" : "./images/icon_16.png",
+		"32" : "./images/icon_32.png",
+		"64" : "./images/icon_64.png"
 	},
 	onChange : handleChange
 });
@@ -37,8 +37,8 @@ function handleChange(state) {
 		} else if (!integratedForActiveTab) {
 			console.log('Integrating buttons...');
 			require("sdk/tabs").activeTab.attach({
-				contentScriptFile : [ self.data.url("jquery-2.2.1.min.js"),
-				                      self.data.url("facebook-button-integration.js") ]
+				contentScriptFile : [ self.data.url("scripts/jquery-2.2.1.min.js"),
+				                      self.data.url("scripts/facebook-button-integration.js") ]
 			});
 			integratedForActiveTab = true;
 			uncheckButton();
