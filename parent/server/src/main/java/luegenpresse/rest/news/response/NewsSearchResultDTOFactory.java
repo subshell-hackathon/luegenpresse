@@ -2,8 +2,8 @@ package luegenpresse.rest.news.response;
 
 import java.util.stream.Collectors;
 
-import commons.luegenpresse.news.NewsDocument;
-import commons.luegenpresse.news.NewsResponse;
+import luegenpresse.news.NewsDocument;
+import luegenpresse.news.NewsResponse;
 
 public class NewsSearchResultDTOFactory {
 	private NewsSearchResultDTOFactory(){}

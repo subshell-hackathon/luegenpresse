@@ -1,6 +1,6 @@
 package luegenpresse.rest.news.request;
 
-import commons.luegenpresse.news.NewsRequest;
+import luegenpresse.news.NewsRequest;
 
 public class NewsRequestFactory {
 	private NewsRequestFactory(){}

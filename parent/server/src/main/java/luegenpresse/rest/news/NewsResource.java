@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import commons.luegenpresse.news.INewsRepository;
-import commons.luegenpresse.news.NewsResponse;
+import luegenpresse.news.INewsRepository;
+import luegenpresse.news.NewsResponse;
 import luegenpresse.rest.news.request.NewsRequestDTO;
 import luegenpresse.rest.news.request.NewsRequestFactory;
 import luegenpresse.rest.news.response.NewsSearchResultDTO;

@@ -1,4 +1,4 @@
-package commons.luegenpresse.news;
+package luegenpresse.news;
 
 public interface INewsRepository {
 	

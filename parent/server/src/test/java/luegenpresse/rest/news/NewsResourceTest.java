@@ -6,9 +6,9 @@ import static org.hamcrest.Matchers.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import commons.luegenpresse.news.INewsRepository;
-import commons.luegenpresse.news.NewsDocument;
-import commons.luegenpresse.news.NewsRepositoryInMemory;
+import luegenpresse.news.INewsRepository;
+import luegenpresse.news.NewsDocument;
+import luegenpresse.news.NewsRepositoryInMemory;
 import luegenpresse.rest.news.request.NewsRequestDTO;
 import luegenpresse.rest.news.response.NewsSearchResultDTO;
 

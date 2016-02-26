@@ -1,4 +1,4 @@
-package commons.luegenpresse.news;
+package luegenpresse.news;
 
 import java.util.HashMap;
 import java.util.List;

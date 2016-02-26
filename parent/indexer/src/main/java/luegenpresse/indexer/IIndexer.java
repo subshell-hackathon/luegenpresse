@@ -2,7 +2,7 @@ package luegenpresse.indexer;
 
 import java.util.Map;
 
-import commons.luegenpresse.news.INewsRepository;
+import luegenpresse.news.INewsRepository;
 
 public interface IIndexer {
 	/**

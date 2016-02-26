@@ -8,13 +8,14 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import commons.luegenpresse.news.INewsRepository;
-import commons.luegenpresse.news.NewsRepositoryInMemory;
 import luegenpresse.indexer.ts.TagesschauIndexer;
-
-import commons.luegenpresse.news.NewsDocument;
+import luegenpresse.news.INewsRepository;
+import luegenpresse.news.NewsDocument;
+import luegenpresse.news.NewsRepositoryInMemory;
 
 @SpringBootApplication
 public class IndexerApplication {
@@ -23,8 +24,6 @@ public class IndexerApplication {
 	
 	private ThreadPoolTaskScheduler scheduler;
 	
-	private INewsRepository repository = new NewsRepositoryInMemory();
-
 	public static void main(String[] args) {
 		SpringApplication.run(IndexerApplication.class, args);
 	}
@@ -36,7 +35,7 @@ public class IndexerApplication {
 		scheduler.setThreadNamePrefix("IndexerScheduler-");
 		scheduler.initialize();
 
-		scheduler.scheduleWithFixedDelay(() -> tsIndexer.runPeriodically(repository), 1* 60 * 1000);
+		scheduler.scheduleWithFixedDelay(() -> tsIndexer.runPeriodically(repo), 1* 60 * 1000);
 	}
 	
 	@PreDestroy
@@ -47,9 +46,9 @@ public class IndexerApplication {
 	@Autowired
 	private INewsRepository repo;
 	
-//	@PostConstruct
-//	public void start() {
-//		NewsDocument doc = NewsDocument.builder().date(new DateTime()).id("test100").build();
-//		repo.add(doc);
-//	}
+	@PostConstruct
+	public void start() {
+		NewsDocument doc = NewsDocument.builder().date(new DateTime()).id("test100").build();
+		repo.add(doc);
+	}
 }

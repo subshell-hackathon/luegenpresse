@@ -17,9 +17,9 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 
-import commons.luegenpresse.news.INewsRepository;
-import commons.luegenpresse.news.NewsDocument;
 import luegenpresse.indexer.IIndexer;
+import luegenpresse.news.INewsRepository;
+import luegenpresse.news.NewsDocument;
 
 @Component
 public class TagesschauIndexer implements IIndexer {
