@@ -1,13 +1,14 @@
 package luegenpresse.indexer.ts;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
@@ -26,16 +27,16 @@ import luegenpresse.news.INewsRepository;
 import luegenpresse.news.NewsDocument;
 import luegenpresse.news.NewsDocument.NewsDocumentBuilder;
 
-public class TagesschauIndexer implements IIndexer {
-	private URL tsFeedUrl;
-	private static Logger log = LoggerFactory.getLogger(TagesschauIndexer.class);
+public class NDRIndexer implements IIndexer {
+	private URL feedUrl;
+	private static Logger log = LoggerFactory.getLogger(NDRIndexer.class);
+	private static Set<String> paragraphTypes = new HashSet<>(Arrays.asList("text", "h3"));
 
-	public TagesschauIndexer() {
-		try {
-			tsFeedUrl = new URL("http://www.tagesschau.de/xml/rss2");
-		} catch (MalformedURLException e) {
-			log.error("Error in URL. This should not happen.", e);
+	public NDRIndexer(URL rssFeedUrl) {
+		if (rssFeedUrl == null) {
+			throw new IllegalArgumentException("rssFeedUrl must not be null.");
 		}
+		feedUrl = rssFeedUrl;
 	}
 
 	@Override
@@ -43,19 +44,18 @@ public class TagesschauIndexer implements IIndexer {
 		SyndFeedInput input = new SyndFeedInput();
 		SyndFeed feed;
 		try {
-			feed = input.build(new XmlReader(tsFeedUrl));
+			feed = input.build(new XmlReader(feedUrl));
 		} catch (IllegalArgumentException | FeedException | IOException e1) {
 			return;
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		for (SyndEntry syndEntry : feed.getEntries()) {
 			String link = syndEntry.getLink();
-			if (!link.startsWith("http://www.tagesschau.de/")) {
+			if (!link.startsWith("http://www.ndr.de/")) {
 				// Do not process external links.
 				continue;
 			}
-			link = link.replace("http://www.tagesschau.de/", "http://www.tagesschau.de/api/");
-			link = link.replaceFirst(".html\\z", ".json");
+			link = link.replaceFirst(".html\\z", "-app.json");
 			JsonNode node;
 			try {
 				node = mapper.readTree(new URL(link));
@@ -67,20 +67,22 @@ public class TagesschauIndexer implements IIndexer {
 			
 			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
-			JsonNode jsonDate = node.get("date");
-			DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(jsonDate.textValue());
-			docBuilder.date(jsonParsedDate);
-			docBuilder.id("tagesschau-" + node.get("sophoraId").textValue());
-			docBuilder.headline(node.get("topline").textValue() + " - " + node.get("headline").textValue());
-			docBuilder.shortText(node.get("shorttext").textValue());
-			docBuilder.url(node.get("detailsWeb").textValue());
-			docBuilder.source("Tagesschau");
+			docBuilder.date(new DateTime(node.get("t").asLong() * 1000L));
+			docBuilder.id("ndr-" + node.get("id").textValue());
+			docBuilder.headline(node.get("h1").textValue());
+			docBuilder.shortText(node.get("text").textValue());
+			docBuilder.url(syndEntry.getLink());
+			docBuilder.source("NDR");
 			
 			StringBuilder copytext = new StringBuilder();
-			Iterator<JsonNode> paragraphs = node.get("copytext").elements();
+			Iterator<JsonNode> paragraphs = node.get("content").elements();
 			while (paragraphs.hasNext()) {
 				JsonNode paragraph = paragraphs.next();
-				String paragraphText = paragraph.get("text").textValue();
+				JsonNode paragraphType = paragraph.get("type");
+				if (paragraphType == null || !paragraphTypes.contains(paragraphType.textValue())) {
+					continue;
+				}
+				String paragraphText = paragraph.get("content").textValue();
 				paragraphText = stripTags(paragraphText);
 				copytext.append(paragraphText);
 				copytext.append("\n");
