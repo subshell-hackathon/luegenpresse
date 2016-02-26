@@ -7,6 +7,10 @@ public class NewsRequestDTO {
 	private DateTime date;
 	private String text;
 	private String source;
+	
+	public NewsRequestDTO() {
+		
+	}
 
 	public DateTime getDate() {
 		return date;

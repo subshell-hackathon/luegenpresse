@@ -2,6 +2,7 @@ package luegenpresse.rest.news;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,7 @@ public class NewsResource {
 	public static final String NEWS_PATH = "/news";
 	
 	@RequestMapping(value="/find", method=RequestMethod.POST)
-	public NewsSearchResultDTO findNews(NewsRequestDTO request) {
+	public NewsSearchResultDTO findNews(@RequestBody NewsRequestDTO request) {
 		NewsResponse found = newsRepo.findBy(NewsRequestFactory.create(request));
 		NewsSearchResultDTO response = NewsSearchResultDTOFactory.create(found);
 		return response;
