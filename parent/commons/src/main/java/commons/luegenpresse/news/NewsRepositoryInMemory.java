@@ -29,9 +29,9 @@ public class NewsRepositoryInMemory implements INewsRepository {
 		Stream<NewsDocument> stream = news.values().stream();
 		if (request.getText()!=null) {
 			stream = stream.filter(news -> 
-			StringUtils.equals(request.getText(), news.getFullText())||
-			StringUtils.equals(request.getText(), news.getShortText())||
-			StringUtils.equals(request.getText(), news.getHeadLine())
+			StringUtils.equalsIgnoreCase(request.getText(), news.getFullText())||
+			StringUtils.equalsIgnoreCase(request.getText(), news.getShortText())||
+			StringUtils.equalsIgnoreCase(request.getText(), news.getHeadLine())
 			);
 		}
 		if (request.getDate() != null) {
