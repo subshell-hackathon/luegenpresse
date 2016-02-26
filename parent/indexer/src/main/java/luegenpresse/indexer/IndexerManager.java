@@ -33,6 +33,7 @@ public class IndexerManager {
 	private void init() throws MalformedURLException {
 		indexers = new HashSet<IIndexer>(Arrays.asList(
 				new TagesschauIndexer(),
+				new NDRIndexer(new URL("http://www.ndr.de/home/index-rss.xml")),
 				new NDRIndexer(new URL("http://www.ndr.de/nachrichten/niedersachsen/index-rss.xml")),
 				new NDRIndexer(new URL("http://www.ndr.de/nachrichten/schleswig-holstein/index-rss.xml")),
 				new NDRIndexer(new URL("http://www.ndr.de/nachrichten/mecklenburg-vorpommern/index-rss.xml")),
