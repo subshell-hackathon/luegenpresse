@@ -3,9 +3,12 @@ package luegenpresse.indexer.ts;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.jsoup.Jsoup;
@@ -22,6 +25,7 @@ import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 
 import luegenpresse.indexer.IIndexer;
+import luegenpresse.indexer.JsonNodeWrapper;
 import luegenpresse.news.INewsRepository;
 import luegenpresse.news.NewsDocument;
 import luegenpresse.news.NewsDocument.NewsDocumentBuilder;
@@ -56,9 +60,9 @@ public class TagesschauIndexer implements IIndexer {
 			}
 			link = link.replace("http://www.tagesschau.de/", "http://www.tagesschau.de/api/");
 			link = link.replaceFirst(".html\\z", ".json");
-			JsonNode node;
+			JsonNodeWrapper node;
 			try {
-				node = mapper.readTree(new URL(link));
+				node = new JsonNodeWrapper(mapper.readTree(new URL(link)));
 			} catch (IOException e) {
 				// Ignore it if we cannot read it.
 				log.info("Cannot read or parse '" + link + "'.", e);
@@ -67,18 +71,25 @@ public class TagesschauIndexer implements IIndexer {
 
 			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
-			JsonNode jsonDate = node.get("date");
-			DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(jsonDate.textValue());
-			docBuilder.date(jsonParsedDate);
-			docBuilder.id("tagesschau-" + node.get("sophoraId").textValue());
-			docBuilder.headline(node.get("topline").textValue() + " - " + node.get("headline").textValue());
-			docBuilder.shortText(node.get("shorttext").textValue());
-			docBuilder.url(node.get("detailsWeb").textValue());
+			node.get("date").ifPresent(value -> {
+				DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(value.textValue());
+				docBuilder.date(jsonParsedDate);
+			});
+			node.get("sophoraId").ifPresent(value -> docBuilder.id("tagesschau-" + value.textValue()));
+			List<String> headlineParts = new ArrayList<>();
+			node.get("topline").ifPresent(value -> headlineParts.add(value.textValue()));
+			node.get("headline").ifPresent(value -> headlineParts.add(value.textValue()));
+			String headline = StringUtils.join(headlineParts, " - ");
+			if (StringUtils.isNotBlank(headline)) {
+				docBuilder.headline(headline);
+			}
+			node.get("shorttext").ifPresent(value -> docBuilder.shortText(value.textValue()));
+			node.get("detailsWeb").ifPresent(value -> docBuilder.url(value.textValue()));
 			docBuilder.source("Tagesschau");
 
 			StringBuilder copytext = new StringBuilder();
-			if (node.get("copytext") != null) {
-				Iterator<JsonNode> paragraphs = node.get("copytext").elements();
+			node.get("copytext").ifPresent( value -> {
+				Iterator<JsonNode> paragraphs = value.elements();
 				while (paragraphs.hasNext()) {
 					JsonNode paragraph = paragraphs.next();
 					String paragraphText = paragraph.get("text").textValue();
@@ -87,7 +98,7 @@ public class TagesschauIndexer implements IIndexer {
 					copytext.append("\n");
 				}
 				docBuilder.fullText(copytext.toString());
-			}
+			});
 
 			NewsDocument document = docBuilder.build();
 			log.debug("Adding document " + document);
