@@ -52,11 +52,11 @@ function handleChange(state) {
 			});
 			worker.port.on("requestNews", function(payload) {
 				var dataObj = {
-					text : payload.text
+					"text" : payload.text
 				};
 				Request( {
 					url : "http://localhost:8081/news/find",
-					content : dataObj,
+					content : JSON.stringify(dataObj),
 					contentType : "application/json",
 					onComplete : function(response) {
 						if (response.status === 200) {

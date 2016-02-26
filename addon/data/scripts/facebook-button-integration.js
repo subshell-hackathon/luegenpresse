@@ -22,7 +22,12 @@ $("div[id^='hyperfeed_story_id']").each(function() {
 
 self.port.on("responseNews",function(payload) {
 	if (payload.success) {
-		alert("Juhu: " + payload.id);
+		var toAppend = "<ul>";
+		$.each(payload.content.news, function( index, value ){
+			toAppend += "<li><a target=\"_blank\" href=\"" + value.url + "\">" + value.source + ": " + value.headline + "</a></li>"; 
+		});
+		toAppend += "</ul>";
+		$(toAppend).appendTo($("#" + payload.id));
 	} else {
 		alert("Ne: " + payload.content);
 	}
