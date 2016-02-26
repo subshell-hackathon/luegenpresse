@@ -64,7 +64,7 @@ public class TagesschauIndexer implements IIndexer {
 				log.info("Cannot read or parse '" + link + "'.", e);
 				continue;
 			}
-			
+
 			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
 			JsonNode jsonDate = node.get("date");
@@ -75,18 +75,20 @@ public class TagesschauIndexer implements IIndexer {
 			docBuilder.shortText(node.get("shorttext").textValue());
 			docBuilder.url(node.get("detailsWeb").textValue());
 			docBuilder.source("Tagesschau");
-			
+
 			StringBuilder copytext = new StringBuilder();
-			Iterator<JsonNode> paragraphs = node.get("copytext").elements();
-			while (paragraphs.hasNext()) {
-				JsonNode paragraph = paragraphs.next();
-				String paragraphText = paragraph.get("text").textValue();
-				paragraphText = stripTags(paragraphText);
-				copytext.append(paragraphText);
-				copytext.append("\n");
+			if (node.get("copytext") != null) {
+				Iterator<JsonNode> paragraphs = node.get("copytext").elements();
+				while (paragraphs.hasNext()) {
+					JsonNode paragraph = paragraphs.next();
+					String paragraphText = paragraph.get("text").textValue();
+					paragraphText = stripTags(paragraphText);
+					copytext.append(paragraphText);
+					copytext.append("\n");
+				}
+				docBuilder.fullText(copytext.toString());
 			}
-			docBuilder.fullText(copytext.toString());
-			
+
 			NewsDocument document = docBuilder.build();
 			log.debug("Adding document " + document);
 			repository.add(document);

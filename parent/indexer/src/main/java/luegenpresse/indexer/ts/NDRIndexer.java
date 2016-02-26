@@ -64,7 +64,7 @@ public class NDRIndexer implements IIndexer {
 				log.info("Cannot read or parse '" + link + "'.", e);
 				continue;
 			}
-			
+
 			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
 			docBuilder.date(new DateTime(node.get("t").asLong() * 1000L));
@@ -73,22 +73,24 @@ public class NDRIndexer implements IIndexer {
 			docBuilder.shortText(node.get("text").textValue());
 			docBuilder.url(syndEntry.getLink());
 			docBuilder.source("NDR");
-			
+
 			StringBuilder copytext = new StringBuilder();
-			Iterator<JsonNode> paragraphs = node.get("content").elements();
-			while (paragraphs.hasNext()) {
-				JsonNode paragraph = paragraphs.next();
-				JsonNode paragraphType = paragraph.get("type");
-				if (paragraphType == null || !paragraphTypes.contains(paragraphType.textValue())) {
-					continue;
+			if (node.get("content") != null) {
+				Iterator<JsonNode> paragraphs = node.get("content").elements();
+				while (paragraphs.hasNext()) {
+					JsonNode paragraph = paragraphs.next();
+					JsonNode paragraphType = paragraph.get("type");
+					if (paragraphType == null || !paragraphTypes.contains(paragraphType.textValue())) {
+						continue;
+					}
+					String paragraphText = paragraph.get("content").textValue();
+					paragraphText = stripTags(paragraphText);
+					copytext.append(paragraphText);
+					copytext.append("\n");
 				}
-				String paragraphText = paragraph.get("content").textValue();
-				paragraphText = stripTags(paragraphText);
-				copytext.append(paragraphText);
-				copytext.append("\n");
+				docBuilder.fullText(copytext.toString());
 			}
-			docBuilder.fullText(copytext.toString());
-			
+
 			NewsDocument document = docBuilder.build();
 			log.debug("Adding document " + document);
 			repository.add(document);
