@@ -3,10 +3,15 @@ package luegenpresse.indexer.ts;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,10 +25,12 @@ import com.rometools.rome.io.XmlReader;
 import luegenpresse.indexer.IIndexer;
 import luegenpresse.news.INewsRepository;
 import luegenpresse.news.NewsDocument;
+import luegenpresse.news.NewsDocument.NewsDocumentBuilder;
 
 @Component
 public class TagesschauIndexer implements IIndexer {
 	private URL TS_FEED_URL;
+	private static Logger log = LoggerFactory.getLogger(TagesschauIndexer.class);
 
 	public TagesschauIndexer() throws MalformedURLException {
 		TS_FEED_URL = new URL("http://www.tagesschau.de/xml/rss2");
@@ -52,16 +59,37 @@ public class TagesschauIndexer implements IIndexer {
 			} catch (IOException e) {
 				continue; // Ignore it if we cannot read it.
 			}
-			NewsDocument doc = new NewsDocument();
+			
+			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
 			JsonNode jsonDate = node.get("date");
 			DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(jsonDate.textValue());
-			doc.setDate(jsonParsedDate);
-
-			doc.setId("tagesschau-" + node.get("sophoraId").textValue());
-
-			repository.add(doc);
+			docBuilder.date(jsonParsedDate);
+			docBuilder.id("tagesschau-" + node.get("sophoraId").textValue());
+			docBuilder.headLine(node.get("topline").textValue() + " - " + node.get("headline").textValue());
+			docBuilder.shortText(node.get("shorttext").textValue());
+			docBuilder.url(node.get("detailsWeb").textValue());
+			docBuilder.source("Tagesschau");
+			
+			StringBuilder copytext = new StringBuilder();
+			Iterator<JsonNode> paragraphs = node.get("copytext").elements();
+			while (paragraphs.hasNext()) {
+				JsonNode paragraph = paragraphs.next();
+				String paragraphText = paragraph.get("text").textValue();
+				paragraphText = stripTags(paragraphText);
+				copytext.append(paragraphText);
+				copytext.append("\n");
+			}
+			docBuilder.fullText(copytext.toString());
+			
+			NewsDocument document = docBuilder.build();
+			log.debug("Adding document " + document);
+			repository.add(document);
 		}
+	}
+
+	private String stripTags(String paragraphText) {
+		return Jsoup.clean(paragraphText, Whitelist.none());
 	}
 
 	@Override
