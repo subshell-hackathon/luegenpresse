@@ -17,7 +17,7 @@ import luegenpresse.rest.news.response.NewsSearchResultDTOFactory;
 public class NewsResource {
 	
 	@Autowired
-	private INewsRepository newsRepo;
+	protected INewsRepository newsRepo;
 	
 	public static final String NEWS_PATH = "/news";
 	
