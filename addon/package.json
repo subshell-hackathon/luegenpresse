@@ -1,0 +1,16 @@
+{
+  "title": "Was sagt die Lügenpresse dazu?",
+  "name": "addon",
+  "version": "0.0.1",
+  "description": "NDR/TS-Hackathon-Projekt \"Was sagt die Lügenpresse dazu?\"",
+  "main": "index.js",
+  "author": "Anna, Birgit, Jan, Jil, Konrad, Martina, Nico, Oliver, Susanne, Vasilis",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack"
+  ]
+}
