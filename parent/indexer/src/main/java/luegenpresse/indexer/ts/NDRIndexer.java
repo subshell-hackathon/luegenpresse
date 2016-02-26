@@ -23,6 +23,7 @@ import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 
 import luegenpresse.indexer.IIndexer;
+import luegenpresse.indexer.JsonNodeWrapper;
 import luegenpresse.news.INewsRepository;
 import luegenpresse.news.NewsDocument;
 import luegenpresse.news.NewsDocument.NewsDocumentBuilder;
@@ -56,9 +57,9 @@ public class NDRIndexer implements IIndexer {
 				continue;
 			}
 			link = link.replaceFirst(".html\\z", "-app.json");
-			JsonNode node;
+			JsonNodeWrapper node;
 			try {
-				node = mapper.readTree(new URL(link));
+				node = new JsonNodeWrapper(mapper.readTree(new URL(link)));
 			} catch (IOException e) {
 				// Ignore it if we cannot read it.
 				log.info("Cannot read or parse '" + link + "'.", e);
@@ -67,16 +68,16 @@ public class NDRIndexer implements IIndexer {
 
 			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
-			docBuilder.date(new DateTime(node.get("t").asLong() * 1000L));
-			docBuilder.id("ndr-" + node.get("id").textValue());
-			docBuilder.headline(node.get("h1").textValue());
-			docBuilder.shortText(node.get("text").textValue());
+			node.get("t").ifPresent(value -> docBuilder.date(new DateTime(value.asLong() * 1000L)));
+			node.get("id").ifPresent(value -> docBuilder.id("ndr-" + value.textValue()));
+			node.get("h1").ifPresent(value -> docBuilder.headline(value.textValue()));
+			node.get("text").ifPresent(value -> docBuilder.shortText(value.textValue()));
 			docBuilder.url(syndEntry.getLink());
 			docBuilder.source("NDR");
 
 			StringBuilder copytext = new StringBuilder();
-			if (node.get("content") != null) {
-				Iterator<JsonNode> paragraphs = node.get("content").elements();
+			node.get("content").ifPresent(value -> {
+				Iterator<JsonNode> paragraphs = value.elements();
 				while (paragraphs.hasNext()) {
 					JsonNode paragraph = paragraphs.next();
 					JsonNode paragraphType = paragraph.get("type");
@@ -89,7 +90,7 @@ public class NDRIndexer implements IIndexer {
 					copytext.append("\n");
 				}
 				docBuilder.fullText(copytext.toString());
-			}
+			});
 
 			NewsDocument document = docBuilder.build();
 			log.debug("Adding document " + document);
