@@ -8,9 +8,17 @@ var integratedForActiveTab = false;
 
 // Listen for tab content loads.
 tabs.on('ready', function(tab) {
+	checkTab(tab);
+});
+// Listen for tab switches.
+tabs.on('activate', function(tab) {
+	checkTab(tab);
+});
+
+function checkTab(tab) {
 	isFacebookTabOpen = tab.url.indexOf("facebook.com");
 	integratedForActiveTab = false;
-});
+}
 
 var panel = panels.Panel({
 	contentURL : self.data.url("wrong-active-tab-panel.html"),
