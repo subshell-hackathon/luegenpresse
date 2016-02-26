@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ import commons.luegenpresse.news.INewsRepository;
 import commons.luegenpresse.news.NewsDocument;
 import luegenpresse.indexer.IIndexer;
 
+@Component
 public class TagesschauIndexer implements IIndexer {
 	private URL TS_FEED_URL;
 	
