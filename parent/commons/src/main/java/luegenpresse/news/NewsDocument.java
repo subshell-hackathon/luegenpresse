@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -26,13 +27,17 @@ import lombok.ToString;
 public class NewsDocument {
 
 	@Id
+	@NonNull
 	private String id;
 	@Field
+	@NonNull
 	private String url;
 	@Field
+	@NonNull
 	private String source;
 	@Field
-	private DateTime date;
+	@NonNull
+	private	DateTime date;
 	@Field
 	private Set<String> keywords;
 	@Field
