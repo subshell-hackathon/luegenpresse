@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import commons.luegenpresse.news.INewsRepository;
+import commons.luegenpresse.news.NewsRepositoryInMemory;
 import luegenpresse.indexer.ts.TagesschauIndexer;
 
 @SpringBootApplication
@@ -18,7 +19,7 @@ public class IndexerApplication {
 	
 	private ThreadPoolTaskScheduler scheduler;
 	
-	private INewsRepository repository;
+	private INewsRepository repository = new NewsRepositoryInMemory();
 
 	public static void main(String[] args) {
 		SpringApplication.run(IndexerApplication.class, args);
@@ -29,6 +30,7 @@ public class IndexerApplication {
 		scheduler = new ThreadPoolTaskScheduler();
 		scheduler.setPoolSize(1);
 		scheduler.setThreadNamePrefix("IndexerScheduler-");
+		scheduler.initialize();
 
 		scheduler.scheduleWithFixedDelay(() -> tsIndexer.runPeriodically(repository), 1* 60 * 1000);
 	}

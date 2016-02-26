@@ -24,44 +24,49 @@ import luegenpresse.indexer.IIndexer;
 @Component
 public class TagesschauIndexer implements IIndexer {
 	private URL TS_FEED_URL;
-	
+
 	public TagesschauIndexer() throws MalformedURLException {
 		TS_FEED_URL = new URL("http://www.tagesschau.de/xml/rss2");
 	}
-	
+
 	@Override
 	public void runPeriodically(INewsRepository repository) {
 		SyndFeedInput input = new SyndFeedInput();
+		SyndFeed feed;
 		try {
-			SyndFeed feed = input.build(new XmlReader(TS_FEED_URL));
-	        ObjectMapper mapper = new ObjectMapper();
-			for (SyndEntry syndEntry : feed.getEntries()) {
-				String link = syndEntry.getLink();
-				if (!link.startsWith("http://www.tagesschau.de/")) {
-					continue;
-				}
-				link = link.replace("http://www.tagesschau.de/", "http://www.tagesschau.de/api/");
-				link = link.replace(".html", ".json");
-		        JsonNode node = mapper.readTree(new URL(link));
-		        NewsDocument doc = new NewsDocument();
-		        
-		        JsonNode jsonDate = node.get("date");
-		        DateTime jsonParsedDate = ISODateTimeFormat.basicDateTime().parseDateTime(jsonDate.textValue());
-		        doc.setDate(jsonParsedDate);
-		        
-		        doc.setId("tagesschau-" + node.get("sophoraId"));
-		        
-		        repository.add(doc);
+			feed = input.build(new XmlReader(TS_FEED_URL));
+		} catch (IllegalArgumentException | FeedException | IOException e1) {
+			return;
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		for (SyndEntry syndEntry : feed.getEntries()) {
+			String link = syndEntry.getLink();
+			if (!link.startsWith("http://www.tagesschau.de/")) {
+				continue;
 			}
-		} catch (IllegalArgumentException | FeedException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			link = link.replace("http://www.tagesschau.de/", "http://www.tagesschau.de/api/");
+			link = link.replace(".html", ".json");
+			JsonNode node;
+			try {
+				node = mapper.readTree(new URL(link));
+			} catch (IOException e) {
+				continue; // Ignore it if we cannot read it.
+			}
+			NewsDocument doc = new NewsDocument();
+
+			JsonNode jsonDate = node.get("date");
+			DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(jsonDate.textValue());
+			doc.setDate(jsonParsedDate);
+
+			doc.setId("tagesschau-" + node.get("sophoraId").textValue());
+
+			repository.add(doc);
 		}
 	}
 
 	@Override
 	public void ingestOnce(INewsRepository repository, Map<String, Object> attributes) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
