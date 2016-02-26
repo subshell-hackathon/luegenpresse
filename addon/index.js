@@ -28,8 +28,8 @@ var panel = panels.Panel({
 
 
 var button = ToggleButton({
-	id : "lyingPressButton",
-	label : "Was sagt die Lügenpresse dazu?",
+	id : "factBuddyButton",
+	label : "Fact Buddy",
 	icon : {
 		"16" : "./images/icon_16.png",
 		"32" : "./images/icon_32.png",
