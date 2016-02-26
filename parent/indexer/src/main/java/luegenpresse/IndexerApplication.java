@@ -1,11 +1,12 @@
 package luegenpresse;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import commons.luegenpresse.news.INewsRepository;
 import luegenpresse.indexer.ts.TagesschauIndexer;
@@ -15,8 +16,7 @@ public class IndexerApplication {
 	@Autowired
 	private TagesschauIndexer tsIndexer;
 	
-	@Autowired
-	private TaskScheduler scheduler;
+	private ThreadPoolTaskScheduler scheduler;
 	
 	private INewsRepository repository;
 
@@ -26,6 +26,15 @@ public class IndexerApplication {
 	
 	@PostConstruct
 	private void init() {
+		scheduler = new ThreadPoolTaskScheduler();
+		scheduler.setPoolSize(1);
+		scheduler.setThreadNamePrefix("IndexerScheduler-");
+
 		scheduler.scheduleWithFixedDelay(() -> tsIndexer.runPeriodically(repository), 1* 60 * 1000);
+	}
+	
+	@PreDestroy
+	private void destroy() {
+		scheduler.shutdown();
 	}
 }
