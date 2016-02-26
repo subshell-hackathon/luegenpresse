@@ -1,6 +1,7 @@
 var self = require("sdk/self");
 var tabs = require("sdk/tabs");
 var panels = require("sdk/panel");
+var Request = require("sdk/request").Request;
 var { ToggleButton } = require('sdk/ui/button/toggle');
 
 var isFacebookTabOpen = -1;
@@ -25,6 +26,7 @@ var panel = panels.Panel({
 	onHide : uncheckButton
 });
 
+
 var button = ToggleButton({
 	id : "lyingPressButton",
 	label : "Was sagt die Lügenpresse dazu?",
@@ -44,9 +46,35 @@ function handleChange(state) {
 			});
 		} else if (!integratedForActiveTab) {
 			console.log('Integrating buttons...');
-			require("sdk/tabs").activeTab.attach({
+			worker = require("sdk/tabs").activeTab.attach({
 				contentScriptFile : [ self.data.url("scripts/jquery-2.2.1.min.js"),
 				                      self.data.url("scripts/facebook-button-integration.js") ]
+			});
+			worker.port.on("requestNews", function(payload) {
+				var dataObj = {
+					text : payload.text
+				};
+				Request( {
+					url : "http://localhost:8081/news/find",
+					content : dataObj,
+					contentType : "application/json",
+					onComplete : function(response) {
+						if (response.status === 200) {
+							var responseObj = {
+								success : true,
+								content : response.json,
+								id : payload.id
+							}
+							worker.port.emit("responseNews", responseObj);	
+						} else {
+							var responseObj = {
+								success : false,
+								content : response.status
+							}
+							worker.port.emit("responseNews", responseObj);
+						}
+					}
+				}).post();
 			});
 			integratedForActiveTab = true;
 			uncheckButton();
