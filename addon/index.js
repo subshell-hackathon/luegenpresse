@@ -55,7 +55,7 @@ function handleChange(state) {
 					"text" : payload.text
 				};
 				Request( {
-					url : "http://localhost:8081/news/find",
+					url : "http://91.250.85.78:28082/news/find",
 					content : JSON.stringify(dataObj),
 					contentType : "application/json",
 					onComplete : function(response) {
