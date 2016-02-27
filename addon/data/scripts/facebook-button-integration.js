@@ -111,7 +111,9 @@ $('head').append('<style>' +
 		'.factbuddy-headline {' +
 		'	font-size: 18px;' +
 		'	font-family: sans-serif;' +
-		'	line-height: 48px;' +
+		'	line-height: 52px;' +
+		'	color: #222;' +
+		'	font-weight: bold;' +
 		'}' +
 		'.factbuddy-close {' +
 		'	position: absolute;' +
@@ -125,7 +127,7 @@ $('head').append('<style>' +
 		'	margin: 0 6px 0 6px;' +
 		'	display: block;' +
 		'	overflow-y: scroll;' +
-		'	height: 234px;' +
+		'	height: 245px;' +
 		'	padding-top: 2px' +
 		'}' +
 		'.factbuddy-entry {' +
@@ -153,7 +155,7 @@ $('head').append('<style>' +
 		'}' +
 		'.factbuddy-entry-buttons {' +
 		'	clear: both;' +
-		'	padding: 5px 0 5px 0;' +
+		'	padding: 7px 0 5px 0;' +
 		'	border-top: 1px solid #ccc;' +
 		'	border-bottom: 1px solid #ccc;' +
 		'	text-align: right;' +
