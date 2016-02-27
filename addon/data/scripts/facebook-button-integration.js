@@ -30,7 +30,7 @@ self.port.on("responseNews",function(payload) {
 		toAppend += "</ul>";
 		$(toAppend).appendTo($("#" + payload.id));
 	} else {
-		alert("Ne: " + payload.content);
+		console.log("Ne: " + payload.content);
 	}
 	
 });
