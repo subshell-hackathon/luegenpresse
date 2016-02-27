@@ -9,7 +9,7 @@ $("div[id^='hyperfeed_story_id']").each(function() {
 			"<a id=\"" + story_link + "\" href=\"#\" style=\"color: #7f7f7f; display: inline-block; font-size: 12px; font-weight: bold;\">Sag die Wahrheit!" +
 			"</a>" +
 			"</span>" +
-			"</div>").appendTo($(this));
+			"</div>").appendTo($(this).find(".userContentWrapper div:first-child").first());
 	$("#" + story_link).click(function() {
 		var postText = $("#" + story_id + " .userContent").text();
 		postText += " " + $("#" + story_id + " .userContent + div" ).text();
