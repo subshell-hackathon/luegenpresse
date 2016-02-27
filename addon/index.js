@@ -48,8 +48,8 @@ function handleChange(state) {
 			console.log('Integrating buttons...');
 			worker = require("sdk/tabs").activeTab.attach({
 				contentScriptFile : [ self.data.url("scripts/jquery-2.2.1.min.js"),
-				                      self.data.url("scripts/jquery.eye-1.2.0.min.js"),
-				                      self.data.url("scripts/facebook-button-integration.js")]
+				                      self.data.url("scripts/jquery-observe.js"),
+				                      self.data.url("scripts/facebook-button-integration.js") ]
 			});
 			worker.port.on("requestNews", function(payload) {
 				var dataObj = {
