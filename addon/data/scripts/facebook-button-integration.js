@@ -3,7 +3,6 @@ console.log("Manipulating DOM");
 var addButton = function() {
 	var story_id = $(this).attr("id");
 	var story_link = story_id + "_link";
-//	background-color: rgb(243, 243, 243);
 	$("<div class=\"factbuddy\" style=\"margin: 10px 0 -24px 0; padding: 9px 0; border-top: 1px solid #e5e5e5;\">" +
 			"<span>" +
 			'<a class="factbuddy-open" id="' + story_link + '" href="#" style="color: #7f7f7f; font-size: 12px; font-weight: bold;"><img src="' + self.options.buttonLogoUrl + '" style="float: left; margin-top: -2px; margin-right: 7px;">Frag Fact Buddy!' +
@@ -107,7 +106,7 @@ $('head').append('<style>' +
 		'.factbuddy-borderimage {' +
 		'	position:absolute;' +
 		'	left: 7px;' +
-		'	top:-12px;' +
+		'	top:-11px;' +
 		'}' +
 		'.factbuddy-headline {' +
 		'	font-size: 18px;' +
@@ -127,6 +126,7 @@ $('head').append('<style>' +
 		'	display: block;' +
 		'	overflow-y: scroll;' +
 		'	height: 234px;' +
+		'	padding-top: 2px' +
 		'}' +
 		'.factbuddy-entry {' +
 		'	clear: both;' +
