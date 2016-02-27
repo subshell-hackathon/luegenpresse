@@ -25,7 +25,7 @@ $("div[id^='hyperfeed_story_id']").each(addButton);
 
 $("div[id^='topnews_main_stream']").observe("childlist subtree", "div[id^='hyperfeed_story_id']", function(record) {
 	$("div[id^='hyperfeed_story_id']").each(function() {
-		if($(this).find('.factBuddy').length === 0) {
+		if($(this).find('.factbuddy').length === 0) {
 			$(this).each(addButton);
 		}	
 	});
