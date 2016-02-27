@@ -9,6 +9,7 @@ public class NewsDTO {
 	private String headline;
 	private String source;
 	private String imageUrl;
+	private String shortText;
 	
 	public String getUrl() {
 		return url;
@@ -40,6 +41,14 @@ public class NewsDTO {
 	
 	public void setSource(String source) {
 		this.source = source;
+	}
+	
+	public String getShortText() {
+		return shortText;
+	}
+	
+	public void setShortText(String shortText) {
+		this.shortText = shortText;
 	}
 
 }
