@@ -5,7 +5,7 @@ var addButton = function() {
 	var story_link = story_id + "_link";
 	$("<div class=\"factBuddy\" style=\"padding: 12px 12px 10px; border-top: 1px solid #e5e5e5; background-color: #ffffb4;\">" +
 			"<span>" +
-			"<a id=\"" + story_link + "\" href=\"#\" style=\"color: #7f7f7f; display: inline-block; font-size: 12px; font-weight: bold;\">Sag die Wahrheit!" +
+			"<a class=\"factbuddy-open\" id=\"" + story_link + "\" href=\"#\" style=\"color: #7f7f7f; display: inline-block; font-size: 12px; font-weight: bold;\">Frag Fact Buddy!" +
 			"</a>" +
 			"</span>" +
 			"</div>").appendTo($(this).find(".userContentWrapper div:first-child").first());
@@ -45,3 +45,112 @@ self.port.on("responseNews",function(payload) {
 });
 
 console.log("Done");
+
+$('head').append('<style>' +
+		'#factbuddy-container {' +
+		'	position: absolute;' +
+		'	margin-left:-4px;' +
+		'	margin-top:2px;' +
+		'	height:300px;' +
+		'	width:400px;' +
+		'	background-color: #f5f5f5;' +
+		'	display:block;' +
+		'	z-index:1002;' +
+		'	border-radius: 5px;' +
+		'	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);' +
+		'	-moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);' +
+		'	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);' +
+		'}' +
+		'#factbuddy-header {' +
+		'	border-bottom: 1px solid #ccc;' +
+		'	display: block;' +
+		'	height: 48px;' +
+		'	padding: 2px;' +
+		'}' +
+		'#factbuddy-header img {' +
+		'	float: left;' +
+		'	margin: 0 10px 0 2px;' +
+		'}' +
+		'#factbuddy-borderimage {' +
+		'	position:absolute;' +
+		'	left: 7px;' +
+		'	top:-12px;' +
+		'}' +
+		'#factbuddy-headline {' +
+		'	font-size: 18px;' +
+		'	font-family: sans-serif;' +
+		'	line-height: 48px;' +
+		'}' +
+		'#factbuddy-close {' +
+		'	position: absolute;' +
+		'	top: 21px;' +
+		'	right: 10px;' +
+		'	font-size: 8pt;' +
+		'	text-decoration: none;' +
+		'	font-family: sans-serif;' +
+		'}' +
+		'#factbuddy-content {' +
+		'	margin: 0 6px 0 6px;' +
+		'	display: block;' +
+		'	overflow-y: scroll;' +
+		'	height: 234px;' +
+		'}' +
+		'.factbuddy-entry {' +
+		'	clear: both;' +
+		'	display: inline-block;' +
+		'	margin: 4px 0 4px 0;' +
+		'	width: 100%;' +
+		'}' +
+		'.factbuddy-entry-image {' +
+		'	float: left;' +
+		'	margin: 0 10px 10px 0;' +
+		'	height: 75px;' +
+		'	width: 80px;' +
+		'	background-color: #ccc;' +
+		'}' +
+		'.factbuddy-entry h1 {' +
+		'	font-size: 16px;' +
+		'	font-weight: normal;' +
+		'	margin: 0;' +
+		'	padding: 2px 0 4px 0;' +
+		'}' +
+		'.factbuddy-entry-text {' +
+		'	font-size: 12px;' +
+		'}' +
+		'.factbuddy-entry-buttons {' +
+		'	clear: both;' +
+		'	padding: 5px 0 5px 0;' +
+		'	border-top: 1px solid #ccc;' +
+		'	border-bottom: 1px solid #ccc;' +
+		'	text-align: right;' +
+		'	font-size: 12px;' +
+		'	line-height: 12px;' +
+		'}' +
+		'.factbuddy-entry-buttons a {' +
+		'	color: #999;' +
+		'	text-decoration: none;' +
+		'	margin: 0 0 40px 0;' +
+		'}' +
+		'.factbuddy-entry-buttons a:hover {' +
+		'	color: #999;' +
+		'	text-decoration: underline;' +
+		'}' +
+		'.factbuddy-entry-source {' +
+		'	font-size: 10px;' +
+		'	color: #ccc;' +
+		'	text-transform: uppercase;' +
+		'}' +
+		'.factbuddy-open {' +
+		'	display: block;' +
+		'}' +
+		'</style>');
+
+$('.factbuddy-open').click(
+	function() {
+		$('<div id="factbuddy-container"><div id="factbuddy-borderimage"><img src="../images/border.png" height="7px" width="15px"></div><div id="factbuddy-header"><img src="../images/logo.png" height="45px" width="44px"><div id="factbuddy-headline">Fact Buddy</div><a href="#" id="factbuddy-close">close</a></div><div id="factbuddy-content"><div class="factbuddy-entry"><div class="factbuddy-entry-image"></div><h1>Headline 1</h1><div class="factbuddy-entry-text">Text 1</div><div class="factbuddy-entry-source">Quelle: NDR</div><div class="factbuddy-entry-buttons"><a href="#">Artikel lesen</a>&nbsp;&nbsp;&nbsp;<a href="#">In Kommentar einfügen</a></div></div></div>').insertAfter($(this));
+		$('#factbuddy-container').show();
+		$('#factbuddy-close').click(function() {
+			$('#factbuddy-container').hide();
+		});   
+	}
+);
