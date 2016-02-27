@@ -31,13 +31,39 @@ $("div[id^='topnews_main_stream']").observe("childlist subtree", "div[id^='hyper
 });
 
 self.port.on("responseNews",function(payload) {
+
 	if (payload.success) {
-		var toAppend = "<ul>";
-		$.each(payload.content.news, function( index, value ){
-			toAppend += "<li><a target=\"_blank\" href=\"" + value.url + "\">" + value.source + ": " + value.headline + "</a></li>"; 
+		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
+		'<div class="factbuddy-borderimage"><img src="../images/border.png" height="7px" width="15px"></div>' +
+		'<div class="factbuddy-header"><img src="../images/logo.png" height="45px" width="44px">' +
+		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
+		'<div class="factbuddy-content">';
+		
+		$.each(payload.content.news, function( index, value ) {
+			blockToAppend += '<div class="factbuddy-entry">' +
+			'<div class="factbuddy-entry-image"></div>' +
+			'<h1>' + value.headline + '</h1>' +
+			'<div class="factbuddy-entry-text">Text 1</div>' +
+			'<div class="factbuddy-entry-source">Quelle: ' + value.source + '</div>' +
+			'<div class="factbuddy-entry-buttons"><a href="'+ value.url +'" target="_blank">Artikel lesen</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">In Kommentar einfügen</a></div>' +
+			'</div>'; 
 		});
-		toAppend += "</ul>";
-		$(toAppend).appendTo($("#" + payload.id));
+		blockToAppend += "</div></div>";
+		$(blockToAppend).insertAfter($("#" + payload.id));
+		
+		$('#factbuddy-container-' + payload.id).show();
+		$('#factbuddy-close-' + payload.id).click(function() {
+			$('#factbuddy-container-' + payload.id).remove();
+		}); 
+		
+		
+//		'<div class="factbuddy-entry">' +
+//		'	<div class="factbuddy-entry-image"></div>' +
+//		'	<h1>Headline 1</h1>' +
+//		'	<div class="factbuddy-entry-text">Text 1</div>' +
+//		'	<div class="factbuddy-entry-source">Quelle: NDR</div>' +
+//		'	<div class="factbuddy-entry-buttons"><a href="#">Artikel lesen</a>&nbsp;&nbsp;&nbsp;<a href="#">In Kommentar einfügen</a></div>' +
+//		'</div>' +
 	} else {
 		console.log("Ne: " + payload.content);
 	}
@@ -47,7 +73,7 @@ self.port.on("responseNews",function(payload) {
 console.log("Done");
 
 $('head').append('<style>' +
-		'#factbuddy-container {' +
+		'.factbuddy-container {' +
 		'	position: absolute;' +
 		'	margin-left:-4px;' +
 		'	margin-top:2px;' +
@@ -61,27 +87,27 @@ $('head').append('<style>' +
 		'	-moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);' +
 		'	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5);' +
 		'}' +
-		'#factbuddy-header {' +
+		'.factbuddy-header {' +
 		'	border-bottom: 1px solid #ccc;' +
 		'	display: block;' +
 		'	height: 48px;' +
 		'	padding: 2px;' +
 		'}' +
-		'#factbuddy-header img {' +
+		'.factbuddy-header img {' +
 		'	float: left;' +
 		'	margin: 0 10px 0 2px;' +
 		'}' +
-		'#factbuddy-borderimage {' +
+		'.factbuddy-borderimage {' +
 		'	position:absolute;' +
 		'	left: 7px;' +
 		'	top:-12px;' +
 		'}' +
-		'#factbuddy-headline {' +
+		'.factbuddy-headline {' +
 		'	font-size: 18px;' +
 		'	font-family: sans-serif;' +
 		'	line-height: 48px;' +
 		'}' +
-		'#factbuddy-close {' +
+		'.factbuddy-close {' +
 		'	position: absolute;' +
 		'	top: 21px;' +
 		'	right: 10px;' +
@@ -89,7 +115,7 @@ $('head').append('<style>' +
 		'	text-decoration: none;' +
 		'	font-family: sans-serif;' +
 		'}' +
-		'#factbuddy-content {' +
+		'.factbuddy-content {' +
 		'	margin: 0 6px 0 6px;' +
 		'	display: block;' +
 		'	overflow-y: scroll;' +
@@ -144,13 +170,3 @@ $('head').append('<style>' +
 		'	display: block;' +
 		'}' +
 		'</style>');
-
-$('.factbuddy-open').click(
-	function() {
-		$('<div id="factbuddy-container"><div id="factbuddy-borderimage"><img src="../images/border.png" height="7px" width="15px"></div><div id="factbuddy-header"><img src="../images/logo.png" height="45px" width="44px"><div id="factbuddy-headline">Fact Buddy</div><a href="#" id="factbuddy-close">close</a></div><div id="factbuddy-content"><div class="factbuddy-entry"><div class="factbuddy-entry-image"></div><h1>Headline 1</h1><div class="factbuddy-entry-text">Text 1</div><div class="factbuddy-entry-source">Quelle: NDR</div><div class="factbuddy-entry-buttons"><a href="#">Artikel lesen</a>&nbsp;&nbsp;&nbsp;<a href="#">In Kommentar einfügen</a></div></div></div>').insertAfter($(this));
-		$('#factbuddy-container').show();
-		$('#factbuddy-close').click(function() {
-			$('#factbuddy-container').hide();
-		});   
-	}
-);
