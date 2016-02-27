@@ -34,8 +34,8 @@ self.port.on("responseNews",function(payload) {
 
 	if (payload.success) {
 		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
-		'<div class="factbuddy-borderimage"><img src="../images/border.png" height="7px" width="15px"></div>' +
-		'<div class="factbuddy-header"><img src="../images/logo.png" height="45px" width="44px">' +
+		'<div class="factbuddy-borderimage"><img src="' + self.options.borderUrl + '" height="7px" width="15px"></div>' +
+		'<div class="factbuddy-header"><img src="' + self.options.logoUrl + '" height="45px" width="44px">' +
 		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
 		'<div class="factbuddy-content">';
 		
@@ -43,7 +43,7 @@ self.port.on("responseNews",function(payload) {
 			blockToAppend += '<div class="factbuddy-entry">' +
 			'<div class="factbuddy-entry-image"></div>' +
 			'<h1>' + value.headline + '</h1>' +
-			'<div class="factbuddy-entry-text">Text 1</div>' +
+			'<div class="factbuddy-entry-text">' + value.shortText + '</div>' +
 			'<div class="factbuddy-entry-source">Quelle: ' + value.source + '</div>' +
 			'<div class="factbuddy-entry-buttons"><a href="'+ value.url +'" target="_blank">Artikel lesen</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">In Kommentar einfügen</a></div>' +
 			'</div>'; 

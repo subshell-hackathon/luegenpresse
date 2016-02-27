@@ -49,7 +49,11 @@ function handleChange(state) {
 			worker = require("sdk/tabs").activeTab.attach({
 				contentScriptFile : [ self.data.url("scripts/jquery-2.2.1.min.js"),
 				                      self.data.url("scripts/jquery-observe.js"),
-				                      self.data.url("scripts/facebook-button-integration.js") ]
+				                      self.data.url("scripts/facebook-button-integration.js") ],
+				contentScriptOptions : {
+					borderUrl : self.data.url("images/border.png"),
+					logoUrl : self.data.url("images/icon_32.png")
+				}
 			});
 			worker.port.on("requestNews", function(payload) {
 				var dataObj = {
