@@ -3,7 +3,7 @@ console.log("Manipulating DOM");
 var addButton = function() {
 	var story_id = $(this).attr("id");
 	var story_link = story_id + "_link";
-	$("<div class=\"factbuddy\" style=\"margin: 10px 0 -24px 0; padding: 9px 0; border-top: 1px solid #e5e5e5;\">" +
+	$("<div class=\"factbuddy\" style=\"margin: 10px 0 -12px 0; padding: 9px 0; border-top: 1px solid #e5e5e5;\">" +
 			"<span>" +
 			'<a class="factbuddy-open" id="' + story_link + '" href="#" style="color: #7f7f7f; font-size: 12px; font-weight: bold;"><img src="' + self.options.buttonLogoUrl + '" style="float: left; margin-top: -2px; margin-right: 7px;">Frag Fact Buddy!' +
 			"</a>" +
@@ -35,7 +35,7 @@ self.port.on("responseNews",function(payload) {
 	if (payload.success) {
 		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
 		'<div class="factbuddy-borderimage"><img src="' + self.options.borderUrl + '" height="7px" width="15px"></div>' +
-		'<div class="factbuddy-header"><img src="' + self.options.logoUrl + '">' +
+		'<div class="factbuddy-header"><img height="44px" width="44px" src="' + self.options.logoUrl + '">' +
 		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
 		'<div class="factbuddy-content">';
 		
@@ -53,7 +53,7 @@ self.port.on("responseNews",function(payload) {
 			'</div>'; 
 		});
 		blockToAppend += "</div></div>";
-		$(blockToAppend).insertAfter($("#" + payload.id));
+		$(blockToAppend).insertAfter($("#" + payload.id + " .factbuddy"));
 		
 		$('#factbuddy-container-' + payload.id).show();
 		$('#factbuddy-close-' + payload.id).click(function() {
@@ -63,10 +63,10 @@ self.port.on("responseNews",function(payload) {
 		console.log("Ne: " + payload.content);
 		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
 		'<div class="factbuddy-borderimage"><img src="' + self.options.borderUrl + '" height="7px" width="15px"></div>' +
-		'<div class="factbuddy-header"><img src="' + self.options.logoUrl + '">' +
+		'<div class="factbuddy-header"><img height="44px" width="44px" src="' + self.options.logoUrl + '">' +
 		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
 		'<div class="factbuddy-content">Keine passenden Beiträge gefunden!</div></div>';
-		$(blockToAppend).insertAfter($("#" + payload.id));
+		$(blockToAppend).insertAfter($("#" + payload.id + " .factbuddy"));
 		
 		$('#factbuddy-container-' + payload.id).show();
 		$('#factbuddy-close-' + payload.id).click(function() {
@@ -82,7 +82,7 @@ $('head').append('<style>' +
 		'.factbuddy-container {' +
 		'	position: absolute;' +
 		'	margin-left:-4px;' +
-		'	margin-top:2px;' +
+		'	margin-top:22px;' +
 		'	height:300px;' +
 		'	width:400px;' +
 		'	background-color: #f5f5f5;' +

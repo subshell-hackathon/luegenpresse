@@ -52,7 +52,7 @@ function handleChange(state) {
 				                      self.data.url("scripts/facebook-button-integration.js") ],
 				contentScriptOptions : {
 					borderUrl : self.data.url("images/border.png"),
-					logoUrl : self.data.url("images/icon_32.png"),
+					logoUrl : self.data.url("images/icon_64.png"),
 					buttonLogoUrl : self.data.url("images/icon_16.png"),
 					noImageUrl : self.data.url("images/BuddyPreview.png")
 				}
