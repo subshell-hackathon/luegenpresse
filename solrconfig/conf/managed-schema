@@ -119,6 +119,7 @@
        a "*" only at the start or the end.  -->
 
    <field name="url" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+   <field name="imageUrl" type="string" indexed="true" stored="true" required="true" multiValued="false" />
    <field name="source" type="string" indexed="true" stored="true" required="true" multiValued="false" />
   
    <field name="date" type="date" indexed="true" stored="true" required="true" multiValued="false" />
