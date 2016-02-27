@@ -72,24 +72,24 @@ public class TagesschauIndexer implements IIndexer {
 			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
 			node.get("date").ifPresent(value -> {
-				DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(value.textValue());
+				DateTime jsonParsedDate = ISODateTimeFormat.dateTime().parseDateTime(value.getJsonNode().textValue());
 				docBuilder.date(jsonParsedDate);
 			});
-			node.get("sophoraId").ifPresent(value -> docBuilder.id("tagesschau-" + value.textValue()));
+			node.get("sophoraId").ifPresent(value -> docBuilder.id("tagesschau-" + value.getJsonNode().textValue()));
 			List<String> headlineParts = new ArrayList<>();
-			node.get("topline").ifPresent(value -> headlineParts.add(value.textValue()));
-			node.get("headline").ifPresent(value -> headlineParts.add(value.textValue()));
+			node.get("topline").ifPresent(value -> headlineParts.add(value.getJsonNode().textValue()));
+			node.get("headline").ifPresent(value -> headlineParts.add(value.getJsonNode().textValue()));
 			String headline = StringUtils.join(headlineParts, " - ");
 			if (StringUtils.isNotBlank(headline)) {
 				docBuilder.headline(headline);
 			}
-			node.get("shorttext").ifPresent(value -> docBuilder.shortText(value.textValue()));
-			node.get("detailsWeb").ifPresent(value -> docBuilder.url(value.textValue()));
+			node.get("shorttext").ifPresent(value -> docBuilder.shortText(value.getJsonNode().textValue()));
+			node.get("detailsWeb").ifPresent(value -> docBuilder.url(value.getJsonNode().textValue()));
 			docBuilder.source("Tagesschau");
 
 			StringBuilder copytext = new StringBuilder();
 			node.get("copytext").ifPresent( value -> {
-				Iterator<JsonNode> paragraphs = value.elements();
+				Iterator<JsonNode> paragraphs = value.getJsonNode().elements();
 				while (paragraphs.hasNext()) {
 					JsonNode paragraph = paragraphs.next();
 					String paragraphText = paragraph.get("text").textValue();
@@ -99,6 +99,16 @@ public class TagesschauIndexer implements IIndexer {
 				}
 				docBuilder.fullText(copytext.toString());
 			});
+			
+			node.get("images").ifPresent(images -> 
+				images.get(0).ifPresent(image -> 
+					image.get("variants").ifPresent(variants ->
+						variants.getJsonNode().elements().forEachRemaining(variant -> {
+							JsonNode videowebs = variant.get("videowebs");
+							if (videowebs != null) {
+								docBuilder.imageUrl(videowebs.textValue());
+							}
+						}))));
 
 			NewsDocument document = docBuilder.build();
 			log.debug("Adding document " + document);

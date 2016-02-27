@@ -68,16 +68,16 @@ public class NDRIndexer implements IIndexer {
 
 			NewsDocumentBuilder docBuilder = NewsDocument.builder();
 
-			node.get("t").ifPresent(value -> docBuilder.date(new DateTime(value.asLong() * 1000L)));
-			node.get("id").ifPresent(value -> docBuilder.id("ndr-" + value.textValue()));
-			node.get("h1").ifPresent(value -> docBuilder.headline(value.textValue()));
-			node.get("text").ifPresent(value -> docBuilder.shortText(value.textValue()));
+			node.get("t").ifPresent(value -> docBuilder.date(new DateTime(value.getJsonNode().asLong() * 1000L)));
+			node.get("id").ifPresent(value -> docBuilder.id("ndr-" + value.getJsonNode().textValue()));
+			node.get("h1").ifPresent(value -> docBuilder.headline(value.getJsonNode().textValue()));
+			node.get("text").ifPresent(value -> docBuilder.shortText(value.getJsonNode().textValue()));
 			docBuilder.url(syndEntry.getLink());
 			docBuilder.source("NDR");
 
 			StringBuilder copytext = new StringBuilder();
 			node.get("content").ifPresent(value -> {
-				Iterator<JsonNode> paragraphs = value.elements();
+				Iterator<JsonNode> paragraphs = value.getJsonNode().elements();
 				while (paragraphs.hasNext()) {
 					JsonNode paragraph = paragraphs.next();
 					JsonNode paragraphType = paragraph.get("type");
@@ -91,6 +91,16 @@ public class NDRIndexer implements IIndexer {
 				}
 				docBuilder.fullText(copytext.toString());
 			});
+
+//			node.get("images").ifPresent(images -> 
+//			images.get(0).ifPresent(image -> 
+//				image.get("variants").ifPresent(variants ->
+//					variants.getJsonNode().elements().forEachRemaining(variant -> {
+//						JsonNode videowebs = variant.get("videowebs");
+//						if (videowebs != null) {
+//							docBuilder.imageUrl(videowebs.textValue());
+//						}
+//					}))));
 
 			NewsDocument document = docBuilder.build();
 			log.debug("Adding document " + document);

@@ -48,5 +48,6 @@ public class NewsDocument {
 	private String shortText;
 	@Field
 	private String fullText;
-	
+	@Field
+	private String imageUrl;
 }

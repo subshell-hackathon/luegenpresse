@@ -11,10 +11,31 @@ public class JsonNodeWrapper {
 	private JsonNode node;
 
 	public JsonNodeWrapper(JsonNode node) {
+		if (node == null) {
+			throw new IllegalArgumentException("node must not be null.");
+		}
 		this.node = node;
 	}
 	
-	public Optional<JsonNode> get(String fieldName) {
-		return Optional.ofNullable(node.get(fieldName));
+	public Optional<JsonNodeWrapper> get(String fieldName) {
+		JsonNode jsonNode = node.get(fieldName);
+		if (jsonNode != null) {
+			return Optional.of(new JsonNodeWrapper(jsonNode));
+		} else {
+			return Optional.empty();
+		}
+	}
+	
+	public Optional<JsonNodeWrapper> get(int childIndex) {
+		JsonNode jsonNode = node.get(childIndex);
+		if (jsonNode != null) {
+			return Optional.of(new JsonNodeWrapper(jsonNode));
+		} else {
+			return Optional.empty();
+		}
+	}
+	
+	public JsonNode getJsonNode() {
+		return node;
 	}
 }
