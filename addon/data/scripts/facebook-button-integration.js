@@ -1,7 +1,6 @@
 console.log("Manipulating DOM");
 
-
-$("div[id^='hyperfeed_story_id']").each(function() {
+var addButton = function() {
 	var story_id = $(this).attr("id");
 	var story_link = story_id + "_link";
 	$("<div style=\"padding: 12px 12px 10px; border-top: 1px solid #e5e5e5; background-color: #ffffb4;\">" +
@@ -19,7 +18,15 @@ $("div[id^='hyperfeed_story_id']").each(function() {
 		};
 		self.port.emit("requestNews", dataObj);
 	});
-});
+};
+
+$("div[id^='hyperfeed_story_id']").each(addButton);
+
+$("div[id^='topnews_main_stream']").eye({
+	load: true,
+	find("div[id^='hyperfeed_story_id']"): 
+	
+}, 300);
 
 self.port.on("responseNews",function(payload) {
 	if (payload.success) {
