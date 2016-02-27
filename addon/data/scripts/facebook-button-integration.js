@@ -36,7 +36,7 @@ self.port.on("responseNews",function(payload) {
 		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
 		'<div class="factbuddy-borderimage"><img src="' + self.options.borderUrl + '" height="7px" width="15px"></div>' +
 		'<div class="factbuddy-header"><img height="44px" width="44px" src="' + self.options.logoUrl + '">' +
-		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
+		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">schlie&szlig;en</a></div>' +
 		'<div class="factbuddy-content">';
 		
 		$.each(payload.content.news, function( index, value ) {
@@ -64,7 +64,7 @@ self.port.on("responseNews",function(payload) {
 		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
 		'<div class="factbuddy-borderimage"><img src="' + self.options.borderUrl + '" height="7px" width="15px"></div>' +
 		'<div class="factbuddy-header"><img height="44px" width="44px" src="' + self.options.logoUrl + '">' +
-		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
+		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">schlie&szlig;en</a></div>' +
 		'<div class="factbuddy-content">Keine passenden Beiträge gefunden!</div></div>';
 		$(blockToAppend).insertAfter($("#" + payload.id + " .factbuddy"));
 		
@@ -81,8 +81,8 @@ console.log("Done");
 $('head').append('<style>' +
 		'.factbuddy-container {' +
 		'	position: absolute;' +
-		'	margin-left:-4px;' +
-		'	margin-top:22px;' +
+		'	margin-left: -5px;' +
+		'	margin-top: 10px;' +
 		'	height:300px;' +
 		'	width:400px;' +
 		'	background-color: #f5f5f5;' +
@@ -148,6 +148,8 @@ $('head').append('<style>' +
 		'}' +
 		'.factbuddy-entry-text {' +
 		'	font-size: 12px;' +
+		'	float: right;' +
+		'	width: 298px;' +
 		'}' +
 		'.factbuddy-entry-buttons {' +
 		'	clear: both;' +
@@ -169,8 +171,11 @@ $('head').append('<style>' +
 		'}' +
 		'.factbuddy-entry-source {' +
 		'	font-size: 10px;' +
-		'	color: #ccc;' +
+		'	color: #999;' +
 		'	text-transform: uppercase;' +
+		'	float: right;' +
+		'	width: 298px;' +
+		'	margin: 8px 0 8px 0;' +
 		'}' +
 		'.factbuddy-open {' +
 		'	display: block;' +
