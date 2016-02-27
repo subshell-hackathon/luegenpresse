@@ -11,7 +11,8 @@ $("div[id^='hyperfeed_story_id']").each(function() {
 			"</span>" +
 			"</div>").appendTo($(this));
 	$("#" + story_link).click(function() {
-		var postText = $("#" + story_id).text();
+		var postText = $("#" + story_id + " .userContent").text();
+		postText += " " + $("#" + story_id + " .userContent + div" ).text();
 		var dataObj = {
 			text : postText,
 			id : story_id
