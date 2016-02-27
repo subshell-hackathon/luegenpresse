@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +15,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.jsoup.select.NodeVisitor;
 import org.slf4j.Logger;
@@ -71,10 +71,6 @@ public class GenericHtmlIndexer implements IIndexer {
 	public void runPeriodically(INewsRepository repository) {
 	}
 
-	private String stripTags(String paragraphText) {
-		return Jsoup.clean(paragraphText, Whitelist.none());
-	}
-
 	@Override
 	public void ingestOnce(INewsRepository repository, Map<String, Object> attributes) {
 		String urlString = (String) attributes.get("url");
@@ -99,11 +95,23 @@ public class GenericHtmlIndexer implements IIndexer {
 			if (date.isEmpty()) {
 				date = doc.select("head > meta[name=last-modified]");
 			}
+			String dateString = "";
 			if (date.isEmpty()) {
-				log.error("No OpenGraph date found.");
-				return;
+				log.warn("No OpenGraph date found, trying generic HTML search.");
+				Elements dateElements = doc.select("div.lastchanged");
+				if (dateElements.isEmpty()) {
+					dateElements = doc.select("h3.date");
+					if (dateElements.isEmpty()) {
+						log.error("No date found by generic HTML search.");
+						return;
+					}
+				}
+				dateString = dateElements.get(0).text();
+				dateString = StringUtils.remove(dateString, "Stand: ");
+				dateString = StringUtils.remove(dateString, "Uhr");
+			} else {
+				dateString = date.get(0).attr("content");
 			}
-			String dateString = date.get(0).attr("content");
 			DateTime parsedDate = null;
 			try {
 				parsedDate = ISODateTimeFormat.dateTimeNoMillis().parseDateTime(dateString);
@@ -123,12 +131,10 @@ public class GenericHtmlIndexer implements IIndexer {
 			}
 			if (parsedDate == null) {
 				// Fall back to a universal date parser.
-				Parser parser = new Parser();
-				List<DateGroup> groups = parser.parse(dateString);
-				if (!groups.isEmpty() && !groups.get(0).getDates().isEmpty()) {
-					parsedDate = new DateTime(groups.get(0).getDates().get(0));
+				Optional<DateTime> parseGenericDate = parseGenericDate(dateString);
+				if (parseGenericDate.isPresent()) {
+					parsedDate = parseGenericDate.get();
 				}
-
 			}
 			if (parsedDate == null) {
 				log.error("Unable to parse OpenGraph date.");
@@ -170,5 +176,14 @@ public class GenericHtmlIndexer implements IIndexer {
 			log.error("Exception while retrieving or parsing document.", e);
 		}
 		
+	}
+
+	private Optional<DateTime> parseGenericDate(String dateString) {
+		Parser parser = new Parser();
+		List<DateGroup> groups = parser.parse(dateString);
+		if (!groups.isEmpty() && !groups.get(0).getDates().isEmpty()) {
+			return Optional.of(new DateTime(groups.get(0).getDates().get(0)));
+		}
+		return Optional.empty();
 	}
 }
