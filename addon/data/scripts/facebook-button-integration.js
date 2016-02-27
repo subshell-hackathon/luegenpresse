@@ -3,9 +3,10 @@ console.log("Manipulating DOM");
 var addButton = function() {
 	var story_id = $(this).attr("id");
 	var story_link = story_id + "_link";
-	$("<div class=\"factBuddy\" style=\"padding: 12px 12px 10px; border-top: 1px solid #e5e5e5; background-color: #ffffb4;\">" +
+//	background-color: rgb(243, 243, 243);
+	$("<div class=\"factbuddy\" style=\"margin: 10px 0 -24px 0; padding: 9px 0; border-top: 1px solid #e5e5e5;\">" +
 			"<span>" +
-			"<a class=\"factbuddy-open\" id=\"" + story_link + "\" href=\"#\" style=\"color: #7f7f7f; display: inline-block; font-size: 12px; font-weight: bold;\">Frag Fact Buddy!" +
+			'<a class="factbuddy-open" id="' + story_link + '" href="#" style="color: #7f7f7f; font-size: 12px; font-weight: bold;"><img src="' + self.options.buttonLogoUrl + '" style="float: left; margin-top: -2px; margin-right: 7px;">Frag Fact Buddy!' +
 			"</a>" +
 			"</span>" +
 			"</div>").appendTo($(this).find(".userContentWrapper div:first-child").first());
@@ -35,7 +36,7 @@ self.port.on("responseNews",function(payload) {
 	if (payload.success) {
 		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
 		'<div class="factbuddy-borderimage"><img src="' + self.options.borderUrl + '" height="7px" width="15px"></div>' +
-		'<div class="factbuddy-header"><img src="' + self.options.logoUrl + '" height="45px" width="44px">' +
+		'<div class="factbuddy-header"><img src="' + self.options.logoUrl + '">' +
 		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
 		'<div class="factbuddy-content">';
 		
@@ -55,17 +56,19 @@ self.port.on("responseNews",function(payload) {
 		$('#factbuddy-close-' + payload.id).click(function() {
 			$('#factbuddy-container-' + payload.id).remove();
 		}); 
-		
-		
-//		'<div class="factbuddy-entry">' +
-//		'	<div class="factbuddy-entry-image"></div>' +
-//		'	<h1>Headline 1</h1>' +
-//		'	<div class="factbuddy-entry-text">Text 1</div>' +
-//		'	<div class="factbuddy-entry-source">Quelle: NDR</div>' +
-//		'	<div class="factbuddy-entry-buttons"><a href="#">Artikel lesen</a>&nbsp;&nbsp;&nbsp;<a href="#">In Kommentar einfügen</a></div>' +
-//		'</div>' +
 	} else {
 		console.log("Ne: " + payload.content);
+		var blockToAppend = '<div class="factbuddy-container" id="factbuddy-container-' + payload.id + '">' +
+		'<div class="factbuddy-borderimage"><img src="' + self.options.borderUrl + '" height="7px" width="15px"></div>' +
+		'<div class="factbuddy-header"><img src="' + self.options.logoUrl + '">' +
+		'<div class="factbuddy-headline">Fact Buddy</div><a href="#" class="factbuddy-close" id="factbuddy-close-' + payload.id + '">close</a></div>' +
+		'<div class="factbuddy-content">Keine passenden Beiträge gefunden!</div></div>';
+		$(blockToAppend).insertAfter($("#" + payload.id));
+		
+		$('#factbuddy-container-' + payload.id).show();
+		$('#factbuddy-close-' + payload.id).click(function() {
+			$('#factbuddy-container-' + payload.id).remove();
+		});
 	}
 	
 });
