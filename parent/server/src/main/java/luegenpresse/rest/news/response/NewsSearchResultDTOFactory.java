@@ -23,6 +23,7 @@ public class NewsSearchResultDTOFactory {
 		newsDTO.setHeadline(doc.getHeadline());
 		newsDTO.setSource(doc.getSource());
 		newsDTO.setUrl(doc.getUrl());
+		newsDTO.setImageUrl(doc.getImageUrl());
 		return newsDTO;
 	}
 
