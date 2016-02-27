@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jdom2.Element;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -92,16 +94,18 @@ public class NDRIndexer implements IIndexer {
 				docBuilder.fullText(copytext.toString());
 			});
 
-//			node.get("images").ifPresent(images -> 
-//			images.get(0).ifPresent(image -> 
-//				image.get("variants").ifPresent(variants ->
-//					variants.getJsonNode().elements().forEachRemaining(variant -> {
-//						JsonNode videowebs = variant.get("videowebs");
-//						if (videowebs != null) {
-//							docBuilder.imageUrl(videowebs.textValue());
-//						}
-//					}))));
-
+			syndEntry.getForeignMarkup().stream().filter(e -> {
+				if (!"image".equals(e.getName()) || !"mp".equals(e.getNamespacePrefix())) {
+					return false;
+				}
+				Element child = e.getChild("data", e.getNamespace());
+				if (child == null) {
+					return false;
+				}
+				return child.getContent(0) != null && StringUtils.contains(child.getContent(0).getValue(), "-contentklein.jpg");
+			}).findFirst().ifPresent(image -> 
+				docBuilder.imageUrl(image.getChild("data", image.getNamespace()).getContent(0).getValue()));
+			
 			NewsDocument document = docBuilder.build();
 			log.debug("Adding document " + document);
 			repository.add(document);
