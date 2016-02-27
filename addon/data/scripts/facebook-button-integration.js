@@ -41,8 +41,12 @@ self.port.on("responseNews",function(payload) {
 		'<div class="factbuddy-content">';
 		
 		$.each(payload.content.news, function( index, value ) {
+			var imageUrl = self.options.noImageUrl;
+			if (value.imageUrl) {
+				imageUrl = value.imageUrl
+			}
 			blockToAppend += '<div class="factbuddy-entry">' +
-			'<div class="factbuddy-entry-image"></div>' +
+			'<div class="factbuddy-entry-image"><img width="80px" src="' + imageUrl + '" alt="' + value.headline + '"></div>' +
 			'<h1>' + value.headline + '</h1>' +
 			'<div class="factbuddy-entry-text">' + value.shortText + '</div>' +
 			'<div class="factbuddy-entry-source">Quelle: ' + value.source + '</div>' +
@@ -135,7 +139,6 @@ $('head').append('<style>' +
 		'	margin: 0 10px 10px 0;' +
 		'	height: 75px;' +
 		'	width: 80px;' +
-		'	background-color: #ccc;' +
 		'}' +
 		'.factbuddy-entry h1 {' +
 		'	font-size: 16px;' +
