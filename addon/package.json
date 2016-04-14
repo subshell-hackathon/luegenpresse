@@ -12,5 +12,6 @@
   "license": "MIT",
   "keywords": [
     "jetpack"
-  ]
+  ],
+  "permissions": {"private-browsing": true}
 }
